@@ -31,23 +31,23 @@
     <groupId>org.apache.aries.proxy</groupId>
     <artifactId>org.apache.aries.proxy</artifactId>
     <packaging>bundle</packaging>
-    <name>Apache Aries Proxy Service</name>
-    <version>1.1.1</version>
+    <name>Apache Aries Proxy Service (kb-fork)</name>
+    <version>1.1.1.KB</version>
     <description>
         This bundle contains the proxy service implementation for Apache Aries
     </description>
 
-    <scm>
+<!--    <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/aries/tags/org.apache.aries.proxy-1.1.1</connection>
         <developerConnection>scm:svn:https://svn.apache.org/repos/asf/aries/tags/org.apache.aries.proxy-1.1.1</developerConnection>
         <url>http://svn.apache.org/viewvc/aries/tags/org.apache.aries.proxy-1.1.1</url>
-    </scm>
+    </scm>-->
 
     <properties>
         <aries.osgi.export.pkg>
-            org.apache.aries.proxy;,
-            org.apache.aries.proxy.weaving;,
-            org.apache.aries.proxy.weavinghook;
+            org.apache.aries.proxy;version="1.1.1.KB",
+            org.apache.aries.proxy.weaving;version="1.1.1.KB",
+            org.apache.aries.proxy.weavinghook;version="1.1.1.KB";
         </aries.osgi.export.pkg>
         <aries.osgi.activator>
             org.apache.aries.proxy.impl.ProxyManagerActivator
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.apache.aries.proxy</groupId>
             <artifactId>org.apache.aries.proxy.api</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1.KB</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

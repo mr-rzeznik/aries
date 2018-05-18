@@ -31,24 +31,27 @@
     <groupId>org.apache.aries.proxy</groupId>
     <artifactId>org.apache.aries.proxy.api</artifactId>
     <packaging>bundle</packaging>
-    <name>Apache Aries Proxy API</name>
-    <version>1.1.1-SNAPSHOT</version>
+    <name>Apache Aries Proxy API (kb-fork)</name>
+    <version>1.1.1.KB</version>
     <description>
         This bundle contains the Apache Aries Proxy service API.
     </description>
 
-    <scm>
+<!--    <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/aries/trunk/proxy/proxy-api</connection>
         <developerConnection>scm:svn:https://svn.apache.org/repos/asf/aries/trunk/proxy/proxy-api</developerConnection>
         <url>http://svn.apache.org/viewvc/aries/trunk/proxy/proxy-api</url>
-    </scm>
+    </scm>-->
 
     <properties>
         <!-- Export package versions are maintained in packageinfo files -->
         <aries.osgi.export.pkg>
-            org.apache.aries.proxy*
+            org.apache.aries.proxy*;version="1.1.1.KB"
         </aries.osgi.export.pkg>
         <aries.osgi.private.pkg />
+        <aries.osgi.import.pkg>
+            org.apache.aries.proxy;version="1.1.1.KB"
+        </aries.osgi.import.pkg>
         <lastReleaseVersion>1.0.1</lastReleaseVersion>
         
         <!-- Skip version check for release 1.1.0 as the plugin does not handle the case
