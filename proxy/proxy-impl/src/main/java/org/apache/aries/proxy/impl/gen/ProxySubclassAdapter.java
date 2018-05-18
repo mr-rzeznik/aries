@@ -120,7 +120,7 @@ public class ProxySubclassAdapter extends ClassVisitor implements Opcodes
       //If the super was abstract the subclass should not be!
       access &= ~ACC_ABSTRACT;
     }
-    cv.visit(ProxyUtils.getWeavingJavaVersion(), access, newClassName, signature, name, null);
+    cv.visit(ProxyUtils.getWeavingJavaVersion(), access, newClassName, signature, name, interfaces);
 
     // add a private field for the invocation handler
     // this isn't static in case we have multiple instances of the same
@@ -404,16 +404,16 @@ public class ProxySubclassAdapter extends ClassVisitor implements Opcodes
       // where the generated subclass will be
       // if they are the same process the method otherwise ignore it
       if (currentlyAnalysedClass.getPackage().equals(superclassClass.getPackage())) {
-        processMethod(access, name, desc, signature, exceptions);
-        methodVisitorToReturn = null;
+        MethodVisitor mv = processMethod(access, name, desc, signature, exceptions);
+        methodVisitorToReturn = new ProxyMethodVisitor(api, mv);
       } else {
         methodVisitorToReturn = null;
       }
     } else {
-      processMethod(access, name, desc, signature, exceptions);
+      MethodVisitor mv = processMethod(access, name, desc, signature, exceptions);
       // return null because we don't want the original method code from
       // the superclass
-      methodVisitorToReturn = null;
+      methodVisitorToReturn = new ProxyMethodVisitor(api, mv);
     }
 
     LOGGER.debug(Constants.LOG_EXIT, "visitMethod", methodVisitorToReturn);
@@ -421,8 +421,33 @@ public class ProxySubclassAdapter extends ClassVisitor implements Opcodes
     return methodVisitorToReturn;
 
   }
+  
+  private class ProxyMethodVisitor extends MethodVisitor {
+    
+    private final MethodVisitor newMv;
+    
+    public ProxyMethodVisitor(int api, MethodVisitor mv) {
+      super(api, null);
+      newMv = mv;
+    }
 
-  private void processMethod(int access, String name, String desc, String signature,
+    @Override
+    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+      LOGGER.debug(Constants.LOG_ENTRY, "visitAnnotation", new Object[] {desc, visible});
+      LOGGER.debug(Constants.LOG_EXIT, "visitAnnotation");
+      return newMv.visitAnnotation(desc, visible);
+    }
+
+    @Override
+    public AnnotationVisitor visitAnnotationDefault() {
+      LOGGER.debug(Constants.LOG_ENTRY, "visitAnnotationDefault", new Object[] {});
+      LOGGER.debug(Constants.LOG_EXIT, "visitAnnotationDefault");
+      return newMv.visitAnnotationDefault();
+    }
+    
+  }
+
+  private MethodVisitor processMethod(int access, String name, String desc, String signature,
       String[] exceptions)
   {
     LOGGER.debug(Constants.LOG_ENTRY, "processMethod", new Object[] { access, name, desc,
@@ -614,7 +639,9 @@ public class ProxySubclassAdapter extends ClassVisitor implements Opcodes
     // end the method
     methodAdapter.endMethod();
 
-    LOGGER.debug(Constants.LOG_EXIT, "processMethod");
+    LOGGER.debug(Constants.LOG_EXIT, "processMethod", methodAdapter);
+    
+    return methodAdapter;
   }
 
   private void addClassStaticField(String classBinaryName)
